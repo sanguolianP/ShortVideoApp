@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>miaosha</title>
+    <style>
+        #box{
+            width: 600px;
+            height: 200px;
+            margin: 200px auto;
+            text-align: center;
+            padding-top: 20px;
+            background: cadetblue;
+        }
+    </style>
+</head>
+
+<body>
+<div id="box">
+    <div id="time">
+        <h3>距离 2020年双十一 0点开抢 某个商品</h3>
+        <h1><span id="lt"></span></h1>
+    </div>
+    <input type="button" id="btn" value="抢购"/>
+<!--    <button id="btn">抢购</button>-->
+</div>
+
+<script>
+/*
+倒计时
+2020年双十一 0点开抢 某个商品
+1. 剩余XX时XX分XX秒
+2. 抢购按钮
+
+// 直接调用即可，不考察格式化细节
+function format(ms){
+return ‘剩余XX时XX分XX秒’
+}
+10000 =》 剩余0时0分10秒
+*/
+
+
+    //倒计时剩余秒数初始化
+    let td = 1000000
+
+    //格式化日期的函数
+    function format(ms) {
+        //剩余天数
+        let leftDay = ms/(60*60*24)
+        leftDay = Math.floor(leftDay)
+        //console.log('leftDay: ' + leftDay)
+
+        //剩余小时
+        let leftHour = ms/(60*60) %24
+        leftHour = Math.floor(leftHour)
+        //console.log('leftHour: ' + leftHour)
+
+        //剩余分钟
+        let leftMin = ms/(60) %60
+        leftMin = Math.floor(leftMin)
+        //console.log('leftMin: ' + leftMin)
+
+        //剩余秒数
+        let leftSec = ms %60
+        leftSec = Math.floor(leftSec)
+        //console.log('leftSec: ' + leftSec)
+
+        let str = '剩余 ' + leftDay +' 天 ' +leftHour
+            +' 小时 ' +leftMin +' 分 ' +leftSec +' 秒'
+
+        return str
+    }
+
+    //针对目标日期的倒计时函数
+    function timeDown(targetYear, targetMonth, targetDay, targetHour, targetMin, targetSec){
+
+        let currDate = new Date()
+        let targetDate = new Date(targetYear, targetMonth-1, targetDay, targetHour, targetMin, targetSec)
+        //console.log(currDate, targetDate)
+
+        let time1 = currDate.getTime()
+        let time2 = targetDate.getTime()
+        //console.log(time1, time2)
+
+        //剩余时间
+        let leftTime = (time2 - time1)/1000
+        //console.log('leftSeconds: ' + leftTime)
+
+        td = leftTime
+
+        lt.innerHTML = format(leftTime)
+    }
+
+    // 获取按钮和显示时间的文本
+    let btn = document.getElementById('btn')
+    let lt = document.getElementById('lt')
+
+    // 让按钮不可点击
+    btn.setAttribute('disabled', 'true')
+
+    //循环定时器
+    let timer = null
+    if (timer) {
+        clearInterval(timer)
+    }
+    timer = setInterval(() => {
+
+        // 设置目标时间 并循环执行倒计时
+        timeDown(2020, 11, 11, 0, 0, 0)
+
+        // 如果倒计时结束，让按钮可点击
+        if(td <= 0){
+            btn.removeAttribute("disabled")
+            clearInterval(timer)
+            lt.innerHTML = '开抢啦！！！'
+        }
+    }, 1000)
+
+
+
+</script>
+
+</body>
+
+</html>
